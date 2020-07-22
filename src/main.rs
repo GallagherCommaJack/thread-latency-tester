@@ -1,7 +1,7 @@
 use std::{thread, time::*};
 
-const NUM_ITERS: usize = 1_000_000;
-const NUM_THREADS: usize = 4;
+const NUM_ITERS: usize = 10_000_000;
+const NUM_THREADS: usize = 1;
 
 fn do_yields() -> Vec<Duration> {
     let mut durs = Vec::with_capacity(NUM_ITERS);
@@ -15,7 +15,11 @@ fn do_yields() -> Vec<Duration> {
 }
 
 fn main() {
-    eprintln!("testing w/{} threads for {} iters", NUM_THREADS, NUM_ITERS);
+    let start = Instant::now();
+    eprintln!(
+        "testing w/{:#?} threads for {:#?} iters",
+        NUM_THREADS, NUM_ITERS
+    );
 
     let mut js = Vec::with_capacity(NUM_THREADS);
 
@@ -44,7 +48,7 @@ fn main() {
         .map(|ix| durs[ix].as_micros())
         .collect::<Vec<_>>();
 
-    eprintln!("done!");
+    eprintln!("done in {} seconds", start.elapsed().as_secs());
     eprintln!("min: {} micros", min.as_micros());
     eprintln!("max: {} micros", max.as_micros());
     eprintln!("med: {} micros", med.as_micros());
